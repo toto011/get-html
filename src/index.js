@@ -1,12 +1,36 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React, { Component } from 'react';
+import { render } from "react-dom";
+import cheerio from "cheerio";
+import renderHTML from "react-render-html";
+class App extends Component {
+  state = {
+    data: [],
+    logos: []
+  };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+  componentDidMount() {
+    this.getDataFromApi();
+  }
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+  getDataFromApi = () => {
+    fetch("https://facebook.github.io/react-native/")
+    .then(response => response.text())
+    .then(data => {
+      const $ = cheerio.load(data);
+      this.setState({ logos: $(".logos").html() });
+    })
+    .catch(error => {
+      this.setState({ error: error });
+    });
+  }
+
+  render () {
+    var thisLogos = this.state.logos;
+    var thisLogosWithImages = String(thisLogos).replace(new RegExp('/react-native', 'g'), 'https://facebook.github.io/react-native');
+    return <div className="App">{renderHTML(String(thisLogosWithImages))}</div>;
+  }
+}
+
+render(<App />, document.getElementById("root"));
+
+export default App;
