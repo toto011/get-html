@@ -25,8 +25,7 @@ class App extends Component {
   }
 
   render () {
-    var thisLogos = this.state.logos;
-    var thisLogosWithImages = String(thisLogos).replace(new RegExp('/react-native', 'g'), 'https://facebook.github.io/react-native');
+    const thisLogosWithImages = String(this.state.logos).replace(new RegExp('/react-native', 'g'), 'https://facebook.github.io/react-native');
     return <div className="App">{renderHTML(String(thisLogosWithImages))}</div>;
   }
 }
